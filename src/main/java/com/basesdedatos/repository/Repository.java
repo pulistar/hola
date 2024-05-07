@@ -9,5 +9,5 @@ public interface Repository<T> {
     List<T> findAll() throws SQLException;
     T getById(Integer id) throws SQLException;
     void save(Actor actor) throws SQLException;
-    void delete();
+    void delete(Integer id) throws SQLException;
 }

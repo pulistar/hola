@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.naming.spi.DirStateFactory.Result;
-
 import com.basesdedatos.config.DatabaseConnection;
 import com.basesdedatos.model.Actor;
 
@@ -51,18 +48,33 @@ public class ActorRepository implements Repository<Actor> {
 
     @Override
     public void save(Actor actor) throws SQLException {
-        String sql = "INSERT INTO actor (first_name, last_name) values(?,?)";
+        String sql;
+        if(actor.getActor_id()!= null && actor.getActor_id()>0) {
+            sql = "UPDATE actor SET first_name =?, last_name=? WHERE actor_id= ?";
+        }else {
+            sql = "INSERT INTO actor (first_name, last_name) values(?,?)";
+        }
+
+       
         try(PreparedStatement myStat = geConnection().prepareStatement(sql)){
             myStat.setString(1, actor.getFirst_name());
             myStat.setString(2, actor.getLast_name());
+            if(actor.getActor_id() != null && actor.getActor_id()>0) {
+                myStat.setInt(3, actor.getActor_id());
+            }
             myStat.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void delete() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public void delete(Integer id) throws SQLException {
+        try(PreparedStatement myStamt = geConnection().prepareStatement("DELETE FROM actor WHERE actor_id=?")){
+            myStamt.setInt(1,id);
+            myStamt.executeUpdate();
+        }
     }
 
     private Actor createActor(ResultSet myResult)throws SQLException{
