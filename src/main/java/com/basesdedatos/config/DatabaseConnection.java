@@ -5,16 +5,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static String url = "jdbc:mysql://localhost:3306/sakila";
-    private static String user = "root";
-    private static String pass = "root";
+    private static final String URL = "jdbc:mysql://localhost:3306/propiedades";
+    private static final String USER = "root";
+    private static final String PASSWORD = "kamilopulistar17";
 
-    private static Connection myConn;
-    
-    public static Connection getInstance() throws SQLException{
-        if(myConn == null){
-            myConn = DriverManager.getConnection(url, user, pass);
+    public static Connection getConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Conexión exitosa a la base de datos.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al conectar a la base de datos.");
         }
-        return myConn;
+        return connection;
     }
 }
